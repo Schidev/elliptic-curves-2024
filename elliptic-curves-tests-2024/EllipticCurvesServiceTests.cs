@@ -1,4 +1,5 @@
 ﻿using elliptic_curves_labs_2024.Models.Curves;
+using elliptic_curves_labs_2024.Models.Points;
 using elliptic_curves_labs_2024.Services;
 using elliptic_curves_labs_2024.Services.IServices;
 using System.Numerics;

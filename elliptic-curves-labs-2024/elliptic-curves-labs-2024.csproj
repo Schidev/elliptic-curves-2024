@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Points\" />
     <Folder Include="Views\Curves\" />
     <Folder Include="Views\Points\" />
   </ItemGroup>
