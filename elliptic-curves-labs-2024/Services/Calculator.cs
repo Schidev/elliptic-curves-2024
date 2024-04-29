@@ -1,11 +1,6 @@
 ﻿using elliptic_curves_labs_2024.Models.Curves;
 using elliptic_curves_labs_2024.Models.Points;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace elliptic_curves_labs_2024.Services
 {
@@ -108,37 +103,90 @@ namespace elliptic_curves_labs_2024.Services
 
         public static EllipticCurvePointP PointDouble(EllipticCurvePointP point, EllipticCurveP curve)
         {
-            var POINT_AT_INFINITY = new EllipticCurvePointP(0, 1, 0, curve.module);
-
-            if (point.Equals(POINT_AT_INFINITY))
-                return POINT_AT_INFINITY;
+            var point_at_infinity = EllipticCurvePointService.POINT_AT_INFINITY_P(point.module);
+            
+            if (point == point_at_infinity)
+                return point_at_infinity;
 
             if (point.Y == 0)
-                return POINT_AT_INFINITY;
+                return point_at_infinity;
 
-            var W = curve.a * point.Z * point.Z + 3 * point.X * point.X;
-            var S = point.Y * point.Z;
-            var B = point.X * point.Y * S;
-            var H = W * W - 8 * B;
+            var W = GetPositiveInField(curve.a * point.Z * point.Z + 3 * point.X * point.X, point.module);
+            var S = GetPositiveInField(point.Y * point.Z, point.module);
+            var B = GetPositiveInField(point.X * point.Y * S, point.module);
+            var H = GetPositiveInField(W * W - 8 * B, point.module);
 
-            var new_X = (2 * H * S) % curve.module;
-            var new_Y = (W * (4 * B - H) - 8 * point.Y * point.Y * S * S) % curve.module;
-            var new_Z = (8 * S * S * S) % curve.module;
+            var new_X = GetPositiveInField(2 * H * S, point.module);
+            var new_Y = GetPositiveInField(W * (4 * B - H) - 8 * point.Y * point.Y * BigInteger.ModPow(S, 2, point.module), point.module);
+            var new_Z = GetPositiveInField(8 * BigInteger.ModPow(S, 3, point.module), point.module);
 
-            while (new_X < 0)
-                new_X += curve.module;
+            return new EllipticCurvePointP(new_X, new_Y, new_Z, curve.module);
+        }
 
-            while (new_Y < 0)
-                new_Y += curve.module;
+        public static EllipticCurvePointP AddPoints(EllipticCurvePointP addend_a, EllipticCurvePointP addend_b, EllipticCurveP curve)
+        {
+            var point_at_infinity = EllipticCurvePointService.POINT_AT_INFINITY_P(curve.module);
 
-            while (new_Z < 0)
-                new_Z += curve.module;
+            if (addend_a.module != curve.module || addend_b.module != curve.module)
+                throw new ArgumentException();
 
-            return new EllipticCurvePointP(
-                new_X,
-                new_Y,
-                new_Z,
-                curve.module);
+            if (addend_a == point_at_infinity && addend_b == point_at_infinity)
+                return point_at_infinity;
+
+            if (addend_a == point_at_infinity)
+                return addend_b;
+
+            if (addend_b == point_at_infinity)
+                return addend_a;
+
+            var U1 = GetPositiveInField(addend_b.Y * addend_a.Z, curve.module);
+            var U2 = GetPositiveInField(addend_a.Y * addend_b.Z, curve.module);
+            var V1 = GetPositiveInField(addend_b.X * addend_a.Z, curve.module);
+            var V2 = GetPositiveInField(addend_a.X * addend_b.Z, curve.module);
+
+            if (V1 == V2)
+            {
+                if (U1 != U2)
+                    return point_at_infinity;
+                else
+                    return PointDouble(addend_a, curve);
+            }
+
+            var U = GetPositiveInField(U1 - U2, curve.module);
+            var V = GetPositiveInField(V1 - V2, curve.module);
+            var W = GetPositiveInField(addend_a.Z * addend_b.Z, curve.module);
+            var A = GetPositiveInField(U * U * W - V * V * V - 2 * V * V * V2, curve.module);
+
+            var new_X = GetPositiveInField(V * A, curve.module);
+            var new_Y = GetPositiveInField(U * (V * V * V2 - A) - V * V * V * U2, curve.module);
+            var new_Z = GetPositiveInField(V * V * V * W, curve.module);
+
+            return new EllipticCurvePointP(new_X, new_Y, new_Z, curve.module);
+        }
+
+        public static EllipticCurvePointP PointMultiplyByScalar(EllipticCurvePointP point, BigInteger scalar, EllipticCurveP curve)
+        {
+            var result = EllipticCurvePointService.POINT_AT_INFINITY_P(curve.module);
+            var temp = new EllipticCurvePointP(point.X, point.Y, point.Z, point.module);
+
+            while (scalar != 0)
+            {
+                if ((scalar & 1) == 1)
+                {
+                    result = AddPoints(result, temp, curve);
+                    //result = result.Z != BigInteger.One
+                    //    ? EllipticCurvePointService.EllipticCurvePoint_NormalZ(result)
+                    //    : result;
+
+                }
+                temp = PointDouble(temp, curve);
+                //temp = temp.Z != BigInteger.One
+                //        ? EllipticCurvePointService.EllipticCurvePoint_NormalZ(temp)
+                //        : temp;
+                scalar = scalar >> 1;
+            }
+
+            return result;
         }
 
         #endregion
