@@ -23,4 +23,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\elliptic-curves-labs-2024\elliptic-curves-labs-2024.csproj" />
+  </ItemGroup>
+
 </Project>

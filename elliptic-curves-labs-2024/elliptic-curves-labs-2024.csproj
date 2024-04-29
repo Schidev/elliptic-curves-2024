@@ -9,9 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Curves\" />
     <Folder Include="Models\Points\" />
-    <Folder Include="Services\IServices\" />
     <Folder Include="Views\Curves\" />
     <Folder Include="Views\Points\" />
   </ItemGroup>
