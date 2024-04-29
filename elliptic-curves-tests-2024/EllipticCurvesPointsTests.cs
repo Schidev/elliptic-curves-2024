@@ -1,5 +1,4 @@
 ﻿using elliptic_curves_labs_2024.Models.Curves;
-using elliptic_curves_labs_2024.Services.IServices;
 using elliptic_curves_labs_2024.Services;
 using System.Numerics;
 using elliptic_curves_labs_2024.Models.Points;
@@ -144,11 +143,9 @@ namespace elliptic_curves_tests_2024
             BigInteger module = new BigInteger(11);
             var a_point = new EllipticCurvePointA(x, y, module);
 
-            IEllipticCurvePointService service = new EllipticCurvePointService();
-
             // Act
             var expected = new EllipticCurvePointP(x, y, BigInteger.One, module);
-            var actual = service.EllipticCurvePoint_A2P(a_point);
+            var actual = EllipticCurvePointService.EllipticCurvePoint_A2P(a_point);
 
             // Assert
             Assert.True(expected == actual);
@@ -163,11 +160,9 @@ namespace elliptic_curves_tests_2024
             BigInteger module = new BigInteger(11);
             var a_point = new EllipticCurvePointA(x, y, module);
 
-            IEllipticCurvePointService service = new EllipticCurvePointService();
-
             // Act
             var expected = new EllipticCurvePointP(y, x, BigInteger.One, module);
-            var actual = service.EllipticCurvePoint_A2P(a_point);
+            var actual = EllipticCurvePointService.EllipticCurvePoint_A2P(a_point);
 
             // Assert
             Assert.True(expected != actual);
@@ -185,11 +180,9 @@ namespace elliptic_curves_tests_2024
 
             var p_point = new EllipticCurvePointP(X1, Y1, Z1, module);
 
-            IEllipticCurvePointService service = new EllipticCurvePointService();
-
             // Act
             var expected = new EllipticCurvePointA((1 * 6) % 17, (2 * 6) % 17, module);
-            var actual = service.EllipticCurvePoint_P2A(p_point);
+            var actual = EllipticCurvePointService.EllipticCurvePoint_P2A(p_point);
 
             // Assert
             Assert.True(expected == actual);

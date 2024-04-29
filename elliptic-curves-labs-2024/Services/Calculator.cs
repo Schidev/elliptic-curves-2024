@@ -1,4 +1,6 @@
-﻿using System;
+﻿using elliptic_curves_labs_2024.Models.Curves;
+using elliptic_curves_labs_2024.Models.Points;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -9,7 +11,6 @@ namespace elliptic_curves_labs_2024.Services
 {
     public static class Calculator
     {
-
         #region Euclidean Algorithm
 
         public static BigInteger GetExtendedEuclideanAlgorithmValues(BigInteger number_a, BigInteger number_b, out BigInteger s, out BigInteger t)
@@ -99,6 +100,45 @@ namespace elliptic_curves_labs_2024.Services
             while (number < 0)
                 number += module;
             return number % module;
+        }
+
+        #endregion
+
+        #region Operations with points
+
+        public static EllipticCurvePointP PointDouble(EllipticCurvePointP point, EllipticCurveP curve)
+        {
+            var POINT_AT_INFINITY = new EllipticCurvePointP(0, 1, 0, curve.module);
+
+            if (point.Equals(POINT_AT_INFINITY))
+                return POINT_AT_INFINITY;
+
+            if (point.Y == 0)
+                return POINT_AT_INFINITY;
+
+            var W = curve.a * point.Z * point.Z + 3 * point.X * point.X;
+            var S = point.Y * point.Z;
+            var B = point.X * point.Y * S;
+            var H = W * W - 8 * B;
+
+            var new_X = (2 * H * S) % curve.module;
+            var new_Y = (W * (4 * B - H) - 8 * point.Y * point.Y * S * S) % curve.module;
+            var new_Z = (8 * S * S * S) % curve.module;
+
+            while (new_X < 0)
+                new_X += curve.module;
+
+            while (new_Y < 0)
+                new_Y += curve.module;
+
+            while (new_Z < 0)
+                new_Z += curve.module;
+
+            return new EllipticCurvePointP(
+                new_X,
+                new_Y,
+                new_Z,
+                curve.module);
         }
 
         #endregion

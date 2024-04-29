@@ -1,20 +1,19 @@
 ﻿using elliptic_curves_labs_2024.Models.Points;
-using elliptic_curves_labs_2024.Services.IServices;
 using System.Numerics;
 
 namespace elliptic_curves_labs_2024.Services
 {
-    public class EllipticCurvePointService : IEllipticCurvePointService
+    public static class EllipticCurvePointService
     {
-        public EllipticCurvePointA POINT_AT_INFINITY_A(BigInteger module)
+        public static  EllipticCurvePointA POINT_AT_INFINITY_A(BigInteger module)
             => new EllipticCurvePointA(BigInteger.Zero, BigInteger.Zero, module);
-        public EllipticCurvePointP POINT_AT_INFINITY_P(BigInteger module)
+        public static EllipticCurvePointP POINT_AT_INFINITY_P(BigInteger module)
             => new EllipticCurvePointP(BigInteger.Zero, BigInteger.One, BigInteger.Zero, module);
 
-        public EllipticCurvePointP EllipticCurvePoint_A2P(EllipticCurvePointA point_a)
+        public static EllipticCurvePointP EllipticCurvePoint_A2P(EllipticCurvePointA point_a)
             => new EllipticCurvePointP(point_a.x, point_a.y, BigInteger.One, point_a.module);
 
-        public EllipticCurvePointA EllipticCurvePoint_P2A(EllipticCurvePointP point_p)
+        public static EllipticCurvePointA EllipticCurvePoint_P2A(EllipticCurvePointP point_p)
         {
             if (point_p == POINT_AT_INFINITY_P(point_p.module))
                 return POINT_AT_INFINITY_A(point_p.module);

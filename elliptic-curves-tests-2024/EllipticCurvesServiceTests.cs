@@ -1,7 +1,6 @@
 ﻿using elliptic_curves_labs_2024.Models.Curves;
 using elliptic_curves_labs_2024.Models.Points;
 using elliptic_curves_labs_2024.Services;
-using elliptic_curves_labs_2024.Services.IServices;
 using System.Numerics;
 namespace elliptic_curves_tests_2024
 {
@@ -16,10 +15,8 @@ namespace elliptic_curves_tests_2024
             BigInteger module = new BigInteger(11);
             var a_elliptic_curve = new EllipticCurveA(a, b, module);
 
-            IEllipticCurveService service = new EllipticCurveService();
-
             // Act
-            var isValid = service.IsValid(a_elliptic_curve);
+            var isValid = EllipticCurveService.IsValid(a_elliptic_curve);
 
             // Assert
             Assert.False(isValid);
@@ -34,10 +31,8 @@ namespace elliptic_curves_tests_2024
             BigInteger module = new BigInteger(11);
             var a_elliptic_curve = new EllipticCurveA(a, b, module);
 
-            IEllipticCurveService service = new EllipticCurveService();
-
             // Act
-            var isValid = service.IsValid(a_elliptic_curve);
+            var isValid = EllipticCurveService.IsValid(a_elliptic_curve);
 
             // Assert
             Assert.True(isValid);
