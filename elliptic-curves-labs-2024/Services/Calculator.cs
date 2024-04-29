@@ -174,15 +174,8 @@ namespace elliptic_curves_labs_2024.Services
                 if ((scalar & 1) == 1)
                 {
                     result = AddPoints(result, temp, curve);
-                    //result = result.Z != BigInteger.One
-                    //    ? EllipticCurvePointService.EllipticCurvePoint_NormalZ(result)
-                    //    : result;
-
                 }
                 temp = PointDouble(temp, curve);
-                //temp = temp.Z != BigInteger.One
-                //        ? EllipticCurvePointService.EllipticCurvePoint_NormalZ(temp)
-                //        : temp;
                 scalar = scalar >> 1;
             }
 
