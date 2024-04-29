@@ -8,9 +8,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Curves\" />
-    <Folder Include="Views\Points\" />
-  </ItemGroup>
-
 </Project>

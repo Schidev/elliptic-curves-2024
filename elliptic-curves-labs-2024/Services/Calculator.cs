@@ -92,6 +92,7 @@ namespace elliptic_curves_labs_2024.Services
 
         public static BigInteger GetPositiveInField(BigInteger number, BigInteger module)
         {
+            number %= module;
             while (number < 0)
                 number += module;
             return number % module;
@@ -117,8 +118,8 @@ namespace elliptic_curves_labs_2024.Services
             var H = GetPositiveInField(W * W - 8 * B, point.module);
 
             var new_X = GetPositiveInField(2 * H * S, point.module);
-            var new_Y = GetPositiveInField(W * (4 * B - H) - 8 * point.Y * point.Y * BigInteger.ModPow(S, 2, point.module), point.module);
-            var new_Z = GetPositiveInField(8 * BigInteger.ModPow(S, 3, point.module), point.module);
+            var new_Y = GetPositiveInField(W * (4 * B - H) - 8 * point.Y * point.Y * S * S, point.module);
+            var new_Z = GetPositiveInField(8 * S * S * S, point.module);
 
             return new EllipticCurvePointP(new_X, new_Y, new_Z, curve.module);
         }

@@ -1,4 +1,6 @@
-﻿using elliptic_curves_labs_2024.Models.Points;
+﻿using elliptic_curves_labs_2024.Models.Curves;
+using elliptic_curves_labs_2024.Models.Points;
+using System.Drawing;
 using System.Numerics;
 
 namespace elliptic_curves_labs_2024.Services
@@ -42,6 +44,22 @@ namespace elliptic_curves_labs_2024.Services
             var new_Z = BigInteger.One;
 
             return new EllipticCurvePointP(new_X, new_Y, new_Z, point_p.module);
+        }
+
+        public static bool EllipticCurveA_HasPoint(EllipticCurvePointA point, EllipticCurveA curve)
+        {
+            var left_side = Calculator.GetPositiveInField(point.y * point.y, curve.module);
+            var right_side = Calculator.GetPositiveInField(point.x * point.x * point.x + curve.a * point.x + curve.b, curve.module);
+
+            return left_side == right_side;
+        }
+
+        public static bool EllipticCurveP_HasPoint(EllipticCurvePointP point, EllipticCurveP curve)
+        {
+            var left_side = Calculator.GetPositiveInField(point.Y * point.Y * point.Z, curve.module);
+            var right_side = Calculator.GetPositiveInField(point.X * point.X * point.X + curve.a * point.X * point.Z * point.Z + curve.b * point.Z * point.Z * point.Z, curve.module);
+
+            return left_side == right_side;
         }
     }
 }
