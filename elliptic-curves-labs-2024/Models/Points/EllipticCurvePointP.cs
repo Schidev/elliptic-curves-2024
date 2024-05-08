@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace elliptic_curves_labs_2024.Models.Points
 {
@@ -21,6 +22,29 @@ namespace elliptic_curves_labs_2024.Models.Points
         public override string ToString()
         {
             return String.Format($"Point has the following coordinates: \n\t\t(X, Y, Z) = ({this.X}, {this.Y}, {this.Z}) in F_{module}.");
+        }
+
+        public static EllipticCurvePointP Parse(string input)
+        {
+            string modulusPattern = @"F_(\d+)";
+            string coordinatePattern = @"\((\d+),\s*(\d+),\s*(\d+)\)";
+
+            var modulusMatch = Regex.Match(input, modulusPattern);
+            
+            var module = modulusMatch.Success 
+                ? BigInteger.Parse(modulusMatch.Groups[1].Value) 
+                : throw new Exception("Module was not found.");
+            
+            var coordinateMatch = Regex.Match(input, coordinatePattern);
+            
+            if (!coordinateMatch.Success)
+                throw new Exception("Coordinates were not found.");
+            
+            return new EllipticCurvePointP(
+                    BigInteger.Parse(coordinateMatch.Groups[1].Value),
+                    BigInteger.Parse(coordinateMatch.Groups[2].Value),
+                    BigInteger.Parse(coordinateMatch.Groups[3].Value),
+                    module);
         }
 
         public static bool operator !=(EllipticCurvePointP point_1, EllipticCurvePointP point_2)

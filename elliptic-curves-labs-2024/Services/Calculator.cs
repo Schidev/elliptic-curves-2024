@@ -170,19 +170,46 @@ namespace elliptic_curves_labs_2024.Services
             var result = EllipticCurvePointService.POINT_AT_INFINITY_P(curve.module);
             var temp = new EllipticCurvePointP(point.X, point.Y, point.Z, point.module);
 
-            while (scalar != 0)
-            {
-                if ((scalar & 1) == 1)
+            if ((scalar & (scalar - 1)) == 0)
+                while (scalar != 0)
                 {
-                    result = AddPoints(result, temp, curve);
-                }
-                temp = PointDouble(temp, curve);
-                scalar = scalar >> 1;
-            }
+                    var temp_register_number = new BigInteger(1);
 
+                    for (int i = 0; i < scalar.GetBitLength() - 1; i++)
+                    {
+                        temp_register_number = temp_register_number << 1;
+                    }
+
+                    if ((scalar & temp_register_number) == 1)
+                    {
+                        result = AddPoints(result, temp, curve);
+                    }
+                    temp = PointDouble(temp, curve);
+
+                    scalar = scalar >> 1;
+                }
+            else
+                while (scalar != 0)
+                {
+                    if ((scalar & 1) == 1)
+                    {
+                        result = AddPoints(result, temp, curve);
+                    }
+                    temp = PointDouble(temp, curve);
+
+                    scalar = scalar >> 1;
+                }
             return result;
         }
 
         #endregion
+
+        public static BigInteger getRandom(int length)
+        {
+            Random random = new Random();
+            byte[] data = new byte[length];
+            random.NextBytes(data);
+            return new BigInteger(data);
+        }
     }
 }
